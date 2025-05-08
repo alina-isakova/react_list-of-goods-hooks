@@ -17,7 +17,7 @@ export const goodsFromServer = [
 ];
 
 interface SortParams {
-  sortField: string;
+  sortField: SortType;
   reverseDirection: boolean;
 }
 
@@ -27,9 +27,6 @@ enum SortType {
   LENGTH = 'length',
 }
 
-// const SORT_FIELD_ALPHABET = 'abc';
-// const SORT_FIELD_LENGTH = 'length';
-
 function getPreparedGoods(
   goods: string[],
   { sortField, reverseDirection }: SortParams,
@@ -37,20 +34,22 @@ function getPreparedGoods(
   const preparedGoods = [...goods];
 
   if (sortField) {
-    const direction = reverseDirection ? -1 : 1;
-
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
         case SortType.ALPHABET:
-          return good1.localeCompare(good2) * direction;
+          return good1.localeCompare(good2);
 
         case SortType.LENGTH:
-          return (good1.length - good2.length) * direction;
+          return good1.length - good2.length;
 
         default:
           return 0;
       }
     });
+  }
+
+  if (reverseDirection) {
+    return preparedGoods.reverse();
   }
 
   return preparedGoods;
